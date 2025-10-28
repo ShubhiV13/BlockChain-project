@@ -1,5 +1,5 @@
-// Add this at the top of your script.js
-const apiBase = "http://localhost:3000";
+// Use current domain for production - FIXED FOR RENDER
+const apiBase = window.location.origin;
 
 // Enhanced error handling for fetch requests
 async function apiCall(endpoint, options = {}) {
@@ -19,11 +19,18 @@ async function apiCall(endpoint, options = {}) {
     return await response.json();
   } catch (error) {
     console.error('API call failed:', error);
-    throw new Error('Network error: Unable to connect to server. Please make sure the server is running.');
+    throw new Error('Network error: Unable to connect to server. Please try again.');
   }
 }
 
-// Update your form submission to use the new apiCall function
+// Initialize
+document.addEventListener('DOMContentLoaded', function() {
+  loadRecords();
+  updateSystemStatus();
+  document.getElementById('date').valueAsDate = new Date();
+});
+
+// Form submission
 document.getElementById("recordForm").addEventListener("submit", async (e) => {
   e.preventDefault();
   
@@ -33,9 +40,7 @@ document.getElementById("recordForm").addEventListener("submit", async (e) => {
   const treatment = document.getElementById("treatment").value.trim();
   const date = document.getElementById("date").value;
 
-  if (!validateForm(patientName, diagnosis, treatment, date)) {
-    return;
-  }
+  if (!validateForm(patientName, diagnosis, treatment, date)) return;
 
   try {
     const endpoint = patientId ? "/edit-record" : "/add-record";
@@ -52,9 +57,7 @@ document.getElementById("recordForm").addEventListener("submit", async (e) => {
     clearForm();
     await loadRecords();
     await updateSystemStatus();
-    
   } catch (error) {
-    console.error('Error:', error);
     showAlert(error.message, 'danger');
   }
 });
@@ -65,32 +68,25 @@ function validateForm(patientName, diagnosis, treatment, date) {
     showAlert('Patient name must be at least 2 characters long', 'warning');
     return false;
   }
-  
   if (diagnosis.length < 2) {
     showAlert('Please enter a valid diagnosis', 'warning');
     return false;
   }
-  
   if (treatment.length < 2) {
     showAlert('Please enter a valid treatment plan', 'warning');
     return false;
   }
-  
   if (!date) {
     showAlert('Please select a date', 'warning');
     return false;
   }
-  
   return true;
 }
 
 // Load records
 async function loadRecords() {
   try {
-    const res = await fetch(`${apiBase}/records`);
-    if (!res.ok) throw new Error('Failed to fetch records');
-    
-    const records = await res.json();
+    const records = await apiCall("/records");
     const list = document.getElementById("recordsList");
     list.innerHTML = "";
 
@@ -108,23 +104,17 @@ async function loadRecords() {
       const { patientId, patientName, diagnosis, treatment, date, hash } = record;
       const recordDiv = document.createElement("div");
       recordDiv.className = "record mb-3";
-
       recordDiv.innerHTML = `
         <div class="d-flex justify-content-between align-items-start">
           <div class="flex-grow-1">
             <div class="d-flex align-items-center mb-2">
-              <h5 class="mb-0 me-2">
-                <i class="fa-solid fa-user"></i> ${index + 1}. ${patientName}
-              </h5>
+              <h5 class="mb-0 me-2"><i class="fa-solid fa-user"></i> ${index + 1}. ${patientName}</h5>
               <small class="text-muted">ID: ${patientId}</small>
             </div>
             <p class="mb-1"><b>Diagnosis:</b> ${diagnosis}</p>
             <p class="mb-1"><b>Treatment:</b> ${treatment}</p>
             <p class="mb-1"><b>Date:</b> ${new Date(date).toLocaleDateString()}</p>
-            <p class="mb-0">
-              <b>Block Hash:</b> 
-              <small class="font-monospace" title="${hash}">${hash.substring(0, 20)}...</small>
-            </p>
+            <p class="mb-0"><b>Block Hash:</b> <small class="font-monospace">${hash.substring(0, 20)}...</small></p>
           </div>
           <div class="btn-group-vertical ms-3">
             <button class="btn btn-outline-primary btn-sm" onclick="editRecord('${patientId}')">
@@ -142,7 +132,6 @@ async function loadRecords() {
       list.appendChild(recordDiv);
     });
   } catch (error) {
-    console.error('Error loading records:', error);
     showAlert('Failed to load records', 'danger');
   }
 }
@@ -150,24 +139,18 @@ async function loadRecords() {
 // Edit record
 async function editRecord(patientId) {
   try {
-    const res = await fetch(`${apiBase}/records`);
-    if (!res.ok) throw new Error('Failed to fetch records');
-    
-    const records = await res.json();
+    const records = await apiCall("/records");
     const record = records.find(r => r.patientId === patientId);
-    
     if (record) {
       document.getElementById("patientId").value = record.patientId;
       document.getElementById("patientName").value = record.patientName;
       document.getElementById("diagnosis").value = record.diagnosis;
       document.getElementById("treatment").value = record.treatment;
       document.getElementById("date").value = record.date;
-      
       window.scrollTo({ top: 0, behavior: "smooth" });
       showAlert(`Editing record for ${record.patientName}`, 'info');
     }
   } catch (error) {
-    console.error('Error loading record for edit:', error);
     showAlert('Failed to load record for editing', 'danger');
   }
 }
@@ -175,21 +158,14 @@ async function editRecord(patientId) {
 // View patient history
 async function viewHistory(patientId) {
   try {
-    const res = await fetch(`${apiBase}/patient-history/${patientId}`);
-    if (!res.ok) throw new Error('Failed to fetch patient history');
-    
-    const history = await res.json();
-    
+    const history = await apiCall(`/patient-history/${patientId}`);
     if (history.length === 0) {
       showAlert('No history found for this patient', 'info');
       return;
     }
-    
     let historyHTML = `<h5>Patient History (${history.length} records)</h5>`;
     history.forEach(record => {
-      const typeBadge = record.type === 'create' ? 'success' : 
-                       record.type === 'update' ? 'warning' : 'danger';
-      
+      const typeBadge = record.type === 'create' ? 'success' : record.type === 'update' ? 'warning' : 'danger';
       historyHTML += `
         <div class="record mb-2 p-2 border-start border-3 border-${typeBadge}">
           <small class="text-${typeBadge}">
@@ -202,36 +178,25 @@ async function viewHistory(patientId) {
         </div>
       `;
     });
-    
     showAlert(historyHTML, 'info', true);
   } catch (error) {
-    console.error('Error loading patient history:', error);
     showAlert('Failed to load patient history', 'danger');
   }
 }
 
 // Delete record
 async function deleteRecord(patientId, patientName) {
-  if (confirm(`🗑️ Are you sure you want to delete record for ${patientName}? This action cannot be undone.`)) {
+  if (confirm(`🗑️ Are you sure you want to delete record for ${patientName}?`)) {
     try {
-      const response = await fetch(`${apiBase}/delete-record`, {
+      const result = await apiCall("/delete-record", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ patientId }),
       });
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.error || 'Delete failed');
-      }
-
       showAlert(result.message, 'success');
       clearForm();
       loadRecords();
       updateSystemStatus();
     } catch (error) {
-      console.error('Error deleting record:', error);
       showAlert(error.message, 'danger');
     }
   }
@@ -249,57 +214,36 @@ function clearForm() {
 function showAlert(message, type = 'info', isHTML = false) {
   const alertContainer = document.getElementById('alertContainer');
   const alertId = 'alert-' + Date.now();
-  
   const alertHTML = `
     <div id="${alertId}" class="alert alert-${type} alert-dismissible fade show" role="alert">
       ${isHTML ? message : `<i class="fa-solid fa-${getAlertIcon(type)}"></i> ${message}`}
       <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
   `;
-  
   alertContainer.innerHTML = alertHTML;
-  
-  // Auto-dismiss after 5 seconds
   setTimeout(() => {
     const alert = document.getElementById(alertId);
-    if (alert) {
-      alert.remove();
-    }
+    if (alert) alert.remove();
   }, 5000);
 }
 
 function getAlertIcon(type) {
-  const icons = {
-    success: 'check-circle',
-    danger: 'exclamation-triangle',
-    warning: 'exclamation-circle',
-    info: 'info-circle'
-  };
+  const icons = { success: 'check-circle', danger: 'exclamation-triangle', warning: 'exclamation-circle', info: 'info-circle' };
   return icons[type] || 'info-circle';
 }
 
 // Update system status
 async function updateSystemStatus() {
   try {
-    const [chainRes, healthRes] = await Promise.all([
-      fetch(`${apiBase}/validate-chain`),
-      fetch(`${apiBase}/health`)
+    const [chainData, healthData] = await Promise.all([
+      apiCall("/validate-chain"),
+      apiCall("/health")
     ]);
-    
-    if (chainRes.ok && healthRes.ok) {
-      const chainData = await chainRes.json();
-      const healthData = await healthRes.json();
-      
-      document.getElementById('chainLength').textContent = chainData.chainLength;
-      document.getElementById('patientCount').textContent = chainData.patientCount;
-      
-      const statusElement = document.getElementById('chainStatus');
-      if (chainData.valid) {
-        statusElement.innerHTML = '<span class="badge bg-success">Valid</span>';
-      } else {
-        statusElement.innerHTML = '<span class="badge bg-danger">Invalid</span>';
-      }
-    }
+    document.getElementById('chainLength').textContent = chainData.chainLength;
+    document.getElementById('patientCount').textContent = chainData.patientCount;
+    document.getElementById('chainStatus').innerHTML = chainData.valid ? 
+      '<span class="badge bg-success">Valid</span>' : 
+      '<span class="badge bg-danger">Invalid</span>';
   } catch (error) {
     console.error('Error updating system status:', error);
   }
