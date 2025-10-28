@@ -1,15 +1,14 @@
 {
   "name": "blockchain-medical-record-system",
-  "version": "2.0.0",
+  "version": "1.0.0",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js"
+    "start": "node server.js"
   },
-  "keywords": ["blockchain", "medical", "records", "security", "healthcare"],
+  "keywords": [],
   "author": "",
-  "license": "MIT",
-  "description": "Secure blockchain-based medical record storage system",
+  "license": "ISC",
+  "description": "Blockchain-based medical record storage app",
   "dependencies": {
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
