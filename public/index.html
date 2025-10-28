@@ -45,47 +45,42 @@
     </div>
 
     <!-- Add/Edit Form -->
-    <div class="glass-card mb-4">
-      <h4 class="mb-3"><i class="fa-solid fa-file-medical"></i> Medical Record</h4>
+<div class="glass-card mb-4">
+  <h4 class="mb-3 text-center-mobile"><i class="fa-solid fa-file-medical"></i> Medical Record</h4>
 
-      <form id="recordForm">
-        <input type="hidden" id="patientId">
-        
-        <div class="row">
-          <div class="col-md-6">
-            <div class="mb-3">
-              <label class="form-label">Patient Name *</label>
-              <input type="text" id="patientName" class="form-control" placeholder="Full name" required maxlength="100">
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="mb-3">
-              <label class="form-label">Date *</label>
-              <input type="date" id="date" class="form-control" required>
-            </div>
-          </div>
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label">Diagnosis *</label>
-          <textarea id="diagnosis" class="form-control" placeholder="Medical diagnosis" rows="2" required maxlength="500"></textarea>
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label">Treatment *</label>
-          <textarea id="treatment" class="form-control" placeholder="Treatment plan" rows="2" required maxlength="500"></textarea>
-        </div>
-
-        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-          <button type="button" class="btn btn-outline-secondary" onclick="clearForm()">
-            <i class="fa-solid fa-eraser"></i> Clear
-          </button>
-          <button class="btn btn-gradient" type="submit">
-            <i class="fa-solid fa-floppy-disk"></i> Save Record
-          </button>
-        </div>
-      </form>
+  <form id="recordForm">
+    <input type="hidden" id="patientId">
+    
+    <div class="mb-3">
+      <label class="form-label">Patient Name *</label>
+      <input type="text" id="patientName" class="form-control" placeholder="Full name" required maxlength="100">
     </div>
+
+    <div class="mb-3">
+      <label class="form-label">Date *</label>
+      <input type="date" id="date" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Diagnosis *</label>
+      <textarea id="diagnosis" class="form-control" placeholder="Medical diagnosis" rows="2" required maxlength="500"></textarea>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Treatment *</label>
+      <textarea id="treatment" class="form-control" placeholder="Treatment plan" rows="2" required maxlength="500"></textarea>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="btn btn-outline-secondary" onclick="clearForm()">
+        <i class="fa-solid fa-eraser"></i> Clear
+      </button>
+      <button class="btn btn-gradient" type="submit">
+        <i class="fa-solid fa-floppy-disk"></i> Save Record
+      </button>
+    </div>
+  </form>
+</div>
 
     <!-- Alert Container -->
     <div id="alertContainer"></div>
