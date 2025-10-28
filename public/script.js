@@ -83,7 +83,7 @@ function validateForm(patientName, diagnosis, treatment, date) {
   return true;
 }
 
-// Load records
+// Load records - Mobile Optimized
 async function loadRecords() {
   try {
     const records = await apiCall("/records");
@@ -104,19 +104,25 @@ async function loadRecords() {
       const { patientId, patientName, diagnosis, treatment, date, hash } = record;
       const recordDiv = document.createElement("div");
       recordDiv.className = "record mb-3";
+
       recordDiv.innerHTML = `
         <div class="d-flex justify-content-between align-items-start">
-          <div class="flex-grow-1">
+          <div class="flex-grow-1 me-3">
             <div class="d-flex align-items-center mb-2">
-              <h5 class="mb-0 me-2"><i class="fa-solid fa-user"></i> ${index + 1}. ${patientName}</h5>
-              <small class="text-muted">ID: ${patientId}</small>
+              <h5 class="mb-0 me-2">
+                <i class="fa-solid fa-user"></i> ${index + 1}. ${patientName}
+              </h5>
             </div>
-            <p class="mb-1"><b>Diagnosis:</b> ${diagnosis}</p>
-            <p class="mb-1"><b>Treatment:</b> ${treatment}</p>
-            <p class="mb-1"><b>Date:</b> ${new Date(date).toLocaleDateString()}</p>
-            <p class="mb-0"><b>Block Hash:</b> <small class="font-monospace">${hash.substring(0, 20)}...</small></p>
+            <p class="mb-1 small"><strong>ID:</strong> ${patientId}</p>
+            <p class="mb-1"><strong>Diagnosis:</strong> ${diagnosis}</p>
+            <p class="mb-1"><strong>Treatment:</strong> ${treatment}</p>
+            <p class="mb-1"><strong>Date:</strong> ${new Date(date).toLocaleDateString()}</p>
+            <p class="mb-0">
+              <strong>Block Hash:</strong> 
+              <small class="font-monospace text-muted d-block" title="${hash}">${hash.substring(0, 20)}...</small>
+            </p>
           </div>
-          <div class="btn-group-vertical ms-3">
+          <div class="btn-group-vertical">
             <button class="btn btn-outline-primary btn-sm" onclick="editRecord('${patientId}')">
               <i class="fa-solid fa-pen-to-square"></i> Edit
             </button>
@@ -132,10 +138,10 @@ async function loadRecords() {
       list.appendChild(recordDiv);
     });
   } catch (error) {
+    console.error('Error loading records:', error);
     showAlert('Failed to load records', 'danger');
   }
 }
-
 // Edit record
 async function editRecord(patientId) {
   try {
