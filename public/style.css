@@ -15,7 +15,6 @@ body {
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
-
 /* 🧊 Glassmorphism Container */
 .container {
   max-width: 800px;
@@ -25,7 +24,7 @@ body {
   background: rgba(255, 255, 255, 0.15);
   border-radius: 20px;
   box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-  padding: 30px;
+  padding: 20px;
   animation: fadeIn 1s ease;
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
@@ -35,7 +34,7 @@ h1 {
   text-align: center;
   font-weight: 700;
   color: white;
-  font-size: 2.2em;
+  font-size: 1.8em;
   margin-bottom: 10px;
   text-shadow: 0 2px 10px rgba(0,0,0,0.3);
 }
@@ -47,18 +46,13 @@ h1 i {
 
 /* Card Styling */
 .glass-card {
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.95);
   border-radius: 15px;
   box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-  padding: 25px;
-  margin-bottom: 25px;
+  padding: 20px;
+  margin-bottom: 20px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   border: 1px solid rgba(255, 255, 255, 0.3);
-}
-
-.glass-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 35px rgba(0,0,0,0.15);
 }
 
 /* Form Labels */
@@ -66,137 +60,117 @@ h1 i {
   font-weight: 600;
   color: #2c3e50;
   margin-bottom: 8px;
+  display: block;
 }
 
 /* Inputs */
 input.form-control, textarea.form-control {
   border-radius: 10px;
   margin-bottom: 15px;
-  border: 2px solid transparent;
+  border: 2px solid #e9ecef;
   padding: 12px 15px;
-  background: rgba(255, 255, 255, 0.95);
+  background: #ffffff;
   box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
   transition: all 0.3s ease;
-  font-size: 0.95em;
+  font-size: 16px; /* Prevents zoom on iOS */
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Fix for date input on mobile */
+input[type="date"].form-control {
+  min-height: 50px;
 }
 
 input.form-control:focus, textarea.form-control:focus {
   outline: none;
   background: #fff;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
-  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(86, 171, 47, 0.2);
+  border-color: #56ab2f;
 }
 
 /* Gradient Button */
 .btn-gradient {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #56ab2f 0%, #a8e6cf 100%);
   color: white;
   font-weight: 600;
   border: none;
   border-radius: 10px;
-  padding: 12px 25px;
+  padding: 15px 25px;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 4px 15px rgba(86, 171, 47, 0.3);
+  font-size: 16px;
+  width: 100%;
+  margin: 10px 0;
 }
 
 .btn-gradient:hover {
-  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+  background: linear-gradient(135deg, #4a9c27 0%, #97d4b9 100%);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 6px 20px rgba(86, 171, 47, 0.4);
   color: white;
 }
 
-/* Outline Buttons */
-.btn-outline-primary, .btn-outline-warning, .btn-outline-danger, .btn-outline-secondary {
-  border-radius: 8px;
-  font-weight: 500;
-  transition: all 0.3s ease;
+/* Button Group for Form Actions */
+.form-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
-.btn-outline-primary:hover { background-color: #007bff; color: white; }
-.btn-outline-warning:hover { background-color: #ffc107; color: black; }
-.btn-outline-danger:hover { background-color: #dc3545; color: white; }
-.btn-outline-secondary:hover { background-color: #6c757d; color: white; }
+.form-actions .btn {
+  flex: 1;
+  min-width: 120px;
+}
 
 /* Alert Styling */
 .alert {
   border-radius: 12px;
   border: none;
   box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  margin: 15px 0;
 }
 
-.alert-success { background: linear-gradient(135deg, #d4edda, #c3e6cb); color: #155724; }
-.alert-danger { background: linear-gradient(135deg, #f8d7da, #f1b0b7); color: #721c24; }
-.alert-warning { background: linear-gradient(135deg, #fff3cd, #ffeaa7); color: #856404; }
-.alert-info { background: linear-gradient(135deg, #d1ecf1, #b8e2e8); color: #0c5460; }
-
-/* Stored Records */
+/* Records List */
 #recordsList {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 15px;
 }
 
 /* Each Record */
 .record {
   background: rgba(255, 255, 255, 0.95);
-  border-left: 5px solid #667eea;
+  border-left: 5px solid #56ab2f;
   border-radius: 12px;
-  padding: 20px;
+  padding: 15px;
   box-shadow: 0 4px 15px rgba(0,0,0,0.08);
   transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-.record::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, #667eea, #764ba2);
 }
 
 .record:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.12);
 }
 
-/* Record Text */
-.record h5 {
-  font-weight: 600;
-  margin-bottom: 8px;
-  color: #2c3e50;
+/* Record Actions */
+.record-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 10px;
 }
 
-.record p {
-  margin: 0;
-  color: #555;
-  line-height: 1.5;
+.record-actions .btn {
+  flex: 1;
+  min-width: 80px;
+  font-size: 14px;
+  padding: 8px 12px;
 }
 
-/* Badges */
-.badge {
-  font-size: 0.75em;
-  padding: 6px 12px;
-  border-radius: 20px;
-}
-
-/* System Status Cards */
-.glass-card .h4 {
-  color: #667eea;
-  font-weight: 700;
-  margin: 0;
-}
-
-.glass-card h5 {
-  color: #6c757d;
-  font-size: 0.9em;
-  margin-bottom: 8px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+/* System Status */
+.system-status .col-md-4 {
+  margin-bottom: 15px;
 }
 
 /* Fade-in animation */
@@ -205,55 +179,168 @@ input.form-control:focus, textarea.form-control:focus {
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Monospace for hashes */
-.font-monospace {
-  font-family: 'Courier New', monospace;
-  background: rgba(0,0,0,0.05);
-  padding: 2px 6px;
-  border-radius: 4px;
-}
-
-/* ✅ Responsive Fixes */
+/* ✅ Mobile-First Responsive Design */
 @media (max-width: 768px) {
   body {
-    padding: 15px 5px;
+    padding: 10px 5px;
   }
   
   .container {
-    padding: 20px 15px;
+    padding: 15px 10px;
+    border-radius: 15px;
   }
   
   h1 {
-    font-size: 1.8em;
+    font-size: 1.5em;
+    margin-bottom: 5px;
   }
   
   .glass-card {
-    padding: 20px;
-  }
-  
-  .record {
     padding: 15px;
+    margin-bottom: 15px;
   }
   
-  .btn-group-vertical {
-    width: 100%;
-    margin-top: 10px;
-  }
-  
-  .btn-group-vertical .btn {
+  /* Form improvements for mobile */
+  .form-label {
+    font-size: 14px;
     margin-bottom: 5px;
+  }
+  
+  input.form-control, textarea.form-control {
+    padding: 12px;
+    font-size: 16px; /* Prevents zoom */
+    margin-bottom: 12px;
+    min-height: 50px;
+  }
+  
+  textarea.form-control {
+    min-height: 80px;
+  }
+  
+  /* Button improvements */
+  .btn {
+    padding: 12px 15px;
+    font-size: 16px;
+    min-height: 50px;
+  }
+  
+  .form-actions {
+    flex-direction: column;
+  }
+  
+  .form-actions .btn {
+    width: 100%;
+    margin: 5px 0;
+  }
+  
+  /* Record card improvements */
+  .record {
+    padding: 12px;
+  }
+  
+  .record h5 {
+    font-size: 1.1em;
+    margin-bottom: 8px;
+  }
+  
+  .record p {
+    font-size: 0.9em;
+    margin-bottom: 5px;
+  }
+  
+  .record-actions {
+    flex-direction: column;
+  }
+  
+  .record-actions .btn {
+    width: 100%;
+    margin: 2px 0;
+  }
+  
+  /* System status improvements */
+  .system-status .col-md-4 {
+    margin-bottom: 10px;
+  }
+  
+  .system-status .h4 {
+    font-size: 1.3em;
   }
 }
 
-/* Print Styles */
-@media print {
+/* Extra small devices */
+@media (max-width: 480px) {
+  .container {
+    padding: 10px 8px;
+  }
+  
   .glass-card {
-    background: white !important;
-    box-shadow: none !important;
-    border: 1px solid #ddd !important;
+    padding: 12px;
+  }
+  
+  h1 {
+    font-size: 1.3em;
+  }
+  
+  input.form-control, textarea.form-control {
+    padding: 10px;
+    font-size: 16px;
   }
   
   .btn {
-    display: none !important;
+    padding: 10px 12px;
+    font-size: 15px;
   }
+}
+
+/* Fix for very small screens */
+@media (max-width: 360px) {
+  body {
+    padding: 5px 3px;
+  }
+  
+  .container {
+    padding: 8px 5px;
+  }
+  
+  .glass-card {
+    padding: 10px;
+  }
+  
+  h1 {
+    font-size: 1.2em;
+  }
+}
+
+/* Ensure proper spacing for all elements */
+.mb-3 {
+  margin-bottom: 1rem !important;
+}
+
+.mt-3 {
+  margin-top: 1rem !important;
+}
+
+.mb-4 {
+  margin-bottom: 1.5rem !important;
+}
+
+/* Text alignment for better mobile readability */
+.text-center-mobile {
+  text-align: center;
+}
+
+/* Loading states */
+.loading {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+/* Success states */
+.success {
+  border-color: #28a745 !important;
+}
+
+/* Error states */
+.error {
+  border-color: #dc3545 !important;
 }
