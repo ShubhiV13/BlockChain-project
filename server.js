@@ -1,19 +1,24 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const path = require("path");
 const { Block, Blockchain } = require("./blockchain");
 
 const app = express();
 app.use(bodyParser.json());
 app.use(cors());
-app.use(express.static("public"));
+
+// Serve frontend files (HTML, JS, etc.)
+app.use(express.static(path.join(__dirname, "public")));
 
 const medicalChain = new Blockchain();
 
+// Route: Get all records
 app.get("/records", (req, res) => {
   res.json(medicalChain.chain);
 });
 
+// Route: Add a new medical record
 app.post("/add-record", (req, res) => {
   const { patientName, diagnosis, treatment, date } = req.body;
 
@@ -32,6 +37,12 @@ app.post("/add-record", (req, res) => {
   res.json({ message: "Medical record added successfully!" });
 });
 
-app.listen(3000, () =>
-  console.log("🚀 Medical Blockchain app running at http://localhost:3000")
+// Serve index.html on the root route
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () =>
+  console.log(`🚀 Medical Blockchain app running at http://localhost:${PORT}`)
 );
