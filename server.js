@@ -228,8 +228,14 @@ app.get("/blockchain-info", (req, res) => {
   });
 });
 
-// Serve frontend for all routes
-app.get("/*", (req, res) => {
+// FIXED: Serve frontend for all routes - Use proper Express syntax
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
+
+// FIXED: This is the problematic line - use a different approach
+// Instead of app.get("/*"), we'll handle 404s by serving index.html
+app.use((req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
@@ -237,7 +243,7 @@ app.get("/*", (req, res) => {
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
-  console.log(`🚀 Secure Blockchain Medical Records Server running on port ${PORT}`);
+  console.log(`🚀 Secure Blockchain Medical Records Server running on port http://localhost:3000`);
   console.log("⛏️  Mining difficulty:", medicalChain.difficulty);
   console.log("🔗 Genesis block hash:", medicalChain.chain[0].hash);
   console.log("🌐 Server is ready for production!");
