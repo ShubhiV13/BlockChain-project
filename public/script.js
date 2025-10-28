@@ -1,16 +1,29 @@
+// Add this at the top of your script.js
 const apiBase = "http://localhost:3000";
-let currentPatientId = null;
 
-// Initialize
-document.addEventListener('DOMContentLoaded', function() {
-  loadRecords();
-  updateSystemStatus();
-  
-  // Set default date to today
-  document.getElementById('date').valueAsDate = new Date();
-});
+// Enhanced error handling for fetch requests
+async function apiCall(endpoint, options = {}) {
+  try {
+    const response = await fetch(`${apiBase}${endpoint}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        ...options.headers,
+      },
+      ...options
+    });
 
-// Form submission
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('API call failed:', error);
+    throw new Error('Network error: Unable to connect to server. Please make sure the server is running.');
+  }
+}
+
+// Update your form submission to use the new apiCall function
 document.getElementById("recordForm").addEventListener("submit", async (e) => {
   e.preventDefault();
   
@@ -30,22 +43,15 @@ document.getElementById("recordForm").addEventListener("submit", async (e) => {
       { patientId, patientName, diagnosis, treatment, date } :
       { patientName, diagnosis, treatment, date };
 
-    const response = await fetch(`${apiBase}${endpoint}`, {
+    const result = await apiCall(endpoint, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     });
 
-    const result = await response.json();
-
-    if (!response.ok) {
-      throw new Error(result.error || 'Operation failed');
-    }
-
     showAlert(result.message, 'success');
     clearForm();
-    loadRecords();
-    updateSystemStatus();
+    await loadRecords();
+    await updateSystemStatus();
     
   } catch (error) {
     console.error('Error:', error);
