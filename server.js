@@ -5,9 +5,16 @@ const path = require("path");
 const { Block, Blockchain } = require("./blockchain");
 
 const app = express();
+
+// Middleware
 app.use(bodyParser.json({ limit: '10mb' }));
 app.use(cors());
 app.use(express.static(path.join(__dirname, "public")));
+
+// Serve frontend for all routes in production
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
 
 const medicalChain = new Blockchain();
 
@@ -226,8 +233,12 @@ app.get("/blockchain-info", (req, res) => {
   });
 });
 
-app.listen(3000, () => {
-  console.log("🚀 Secure Blockchain Medical Records Server running at http://localhost:3000");
+// Use Render's PORT environment variable
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`🚀 Secure Blockchain Medical Records Server running on port ${PORT}`);
   console.log("⛏️  Mining difficulty:", medicalChain.difficulty);
   console.log("🔗 Genesis block hash:", medicalChain.chain[0].hash);
+  console.log("🌐 Server is ready for production!");
 });
